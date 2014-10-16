@@ -1,6 +1,6 @@
 <?php
 
-require_once 'autoload.php';
+require_once 'vendor/autoload.php';
 
 use FlowDiagram\Block;
 
@@ -31,3 +31,10 @@ $blockC->predecessorTo($blockB);
 
 d($blockA->output());
 d($blockB->output());
+
+$blockB->remove();
+unset($blockB);
+
+
+
+d((memory_get_peak_usage(true) / 1024) . ' KiB');

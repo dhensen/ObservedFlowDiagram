@@ -1,6 +1,6 @@
 <?php
 
-require_once 'autoload.php';
+require_once 'vendor/autoload.php';
 
 // create observable
 $foobarObservable = new Observer\FoobarObservable();
@@ -30,5 +30,4 @@ $foobarObservable->somethingGetsUpdated();
 
 // nothing happens
 
-echo '<br />';
-echo (memory_get_peak_usage(true) / 1024) . 'KiB';
+d((memory_get_peak_usage(true) / 1024) . ' KiB');

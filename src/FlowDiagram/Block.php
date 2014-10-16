@@ -77,6 +77,10 @@ class Block
 	 */
 	public function predecessorTo(Block $block)
 	{
+		if ($this === $block) {
+			return;
+		}
+
 		$this->setSuccessorBlock($block);
 		$block->setPredecessorBlock($this);
 	}
@@ -88,18 +92,30 @@ class Block
 	 */
 	public function successorTo(Block $block)
 	{
+		if ($this === $block) {
+			return;
+		}
+
 		$this->setPredecessorBlock($block);
 		$block->setSuccessorBlock($this);
 	}
 
-	public function setSuccessorBlock(Block $block)
+	public function setSuccessorBlock($block)
 	{
-		$this->_next_block = $block;
+		if ($block instanceof Block) {
+			$this->_next_block = $block;
+		} elseif ($block === null) {
+			$this->_next_block = null;
+		}
 	}
 
-	public function setPredecessorBlock(Block $block)
+	public function setPredecessorBlock($block)
 	{
-		$this->_previous_block = $block;
+		if ($block instanceof Block) {
+			$this->_previous_block = $block;
+		} elseif ($block === null) {
+			$this->_previous_block = null;
+		}
 	}
 
 	public function input()
@@ -153,8 +169,23 @@ class Block
 		return $this->_name;
 	}
 
-	public function __destroy()
+	public function remove()
 	{
+		if ($this->_next_block instanceof Block) {
+			d('removing predecessor ' . $this->_name . ' from successor ' . $this->_previous_block->getName() . '');
+			$this->_next_block->setPredecessorBlock(null);
+		}
+
+		if ($this->_previous_block instanceof Block) {
+			d('removing successor ' . $this->_name . ' from predecessor ' . $this->_previous_block->getName() . '');
+			$this->_previous_block->setSuccessorBlock(null);
+		}
+
 		unset(self::$block_names[$this->_name]);
+	}
+
+	public function __destruct()
+	{
+		echo 'destroying ' . $this->_name;
 	}
 }
